@@ -5,43 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    enum Screen
+
+    public CanvasGroup[] screenCanvas;
+
+    public void SetCurrentScreen(CanvasGroup selectScreen)
     {
-        Main,
-        Settings
+        foreach (CanvasGroup scr in screenCanvas){
+            Utility.SetCanvasGroupEnabled(scr, scr == selectScreen);
+        }
     }
 
-    public CanvasGroup mainScreen;
-    public CanvasGroup settingsScreen;
-
-    void SetCurrentScreen(Screen screen)
+    public void LoadSceneByName(string sceneName)
     {
-        Utility.SetCanvasGroupEnabled(mainScreen, screen == Screen.Main);
-        Utility.SetCanvasGroupEnabled(settingsScreen, screen == Screen.Settings);
-    }
-    
-    void Start()
-    {
-        SetCurrentScreen(Screen.Main);
-    }
-
-    public void StartNewGame()
-    {
-        SceneManager.LoadScene("SampleScene");
-    }
-
-    public void OpenSettings()
-    {
-        SetCurrentScreen(Screen.Settings);
-    }
-
-    public void CloseSettings()
-    {
-        SetCurrentScreen(Screen.Main);
+        SceneManager.LoadScene(sceneName);
     }
 
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    void Start()
+    {
+        SetCurrentScreen(screenCanvas[0]);
     }
 }
