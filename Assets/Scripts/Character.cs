@@ -32,8 +32,8 @@ public class Character : MonoBehaviour
     public TargetIndicator targetIndicator;
     public float runSpeed;
     public float distanceFromEnemy;
-    private PlaySound playSound;
-    public string damageSoundName;
+
+    private CharacterSoundEffects soundEffects;
     
     private Vector3 originalPosition;
     private Quaternion originalRotation;
@@ -47,12 +47,13 @@ public class Character : MonoBehaviour
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
-        playSound = GetComponentInChildren<PlaySound>();
         state = State.Idle;
         health = GetComponent<Health>();
         targetIndicator = GetComponentInChildren<TargetIndicator>(true);
         originalPosition = transform.position;
         originalRotation = transform.rotation;
+        soundEffects = GetComponent<CharacterSoundEffects>();
+
     }
 
     public bool IsIdle()
@@ -80,11 +81,14 @@ public class Character : MonoBehaviour
 
         DamageEffect damageEffect = GetComponent<DamageEffect>();
         if (damageEffect) damageEffect.ShowDamageEffect();
-        if (playSound) playSound.Play(damageSoundName);
 
         health.ApplyDamage(1.0f); // FIXME: захардкожено
-        if (health.current <= 0.0f)
+        if (health.current <= 0.0f){
             state = State.BeginDying;
+        } else {
+            soundEffects.Play("TakeDamage");
+        }
+
     }
 
     [ContextMenu("Attack")]
@@ -161,6 +165,7 @@ public class Character : MonoBehaviour
             case State.BeginAttack:
                 animator.SetTrigger(MeleeAttack);
                 state = State.Attack;
+                soundEffects.Play("Attack");
                 break;
 
             case State.Attack:
@@ -169,6 +174,7 @@ public class Character : MonoBehaviour
             case State.BeginShoot:
                 animator.SetTrigger(Shoot);
                 state = State.Shoot;
+                soundEffects.Play("Shoot");
                 break;
 
             case State.Shoot:
@@ -177,6 +183,7 @@ public class Character : MonoBehaviour
             case State.BeginPunch:
                 animator.SetTrigger(Punch);
                 state = State.Punch;
+                soundEffects.Play("Punch");
                 break;
 
             case State.Punch:
@@ -191,6 +198,7 @@ public class Character : MonoBehaviour
             case State.BeginDying:
                 animator.SetTrigger(Death);
                 state = State.Dead;
+                soundEffects.Play("Die");
                 break;
 
             case State.Dead:
