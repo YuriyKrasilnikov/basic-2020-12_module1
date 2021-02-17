@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
     public float runSpeed;
     public float distanceFromEnemy;
 
-    private CharacterSoundEffects soundEffects;
+    private SoundEffects soundEffects;
     
     private Vector3 originalPosition;
     private Quaternion originalRotation;
@@ -52,7 +52,7 @@ public class Character : MonoBehaviour
         targetIndicator = GetComponentInChildren<TargetIndicator>(true);
         originalPosition = transform.position;
         originalRotation = transform.rotation;
-        soundEffects = GetComponent<CharacterSoundEffects>();
+        soundEffects = GetComponent<SoundEffects>();
 
     }
 

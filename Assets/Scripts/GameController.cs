@@ -14,6 +14,8 @@ internal sealed class GameController : MonoBehaviour
     Character currentTarget;
     bool waitingForInput;
 
+    private SoundEffects soundEffects;
+
     Character FirstAliveCharacter(Character[] characters)
     {
         return characters.FirstOrDefault(character => !character.IsDead());
@@ -21,11 +23,13 @@ internal sealed class GameController : MonoBehaviour
 
     void PlayerWon()
     {
+        soundEffects.Play("Win");
         Debug.Log("Player won.");
     }
 
     void PlayerLost()
     {
+        soundEffects.Play("Lose");
         Debug.Log("Player lost.");
     }
 
@@ -115,6 +119,7 @@ internal sealed class GameController : MonoBehaviour
     {
         attackButton.onClick.AddListener(PlayerAttack);
         Utility.SetCanvasGroupEnabled(buttonPanel, false);
+        soundEffects = GetComponent<SoundEffects>();
         StartCoroutine(GameLoop());
     }
 }
